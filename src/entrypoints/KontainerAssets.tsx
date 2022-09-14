@@ -1,5 +1,6 @@
 import { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Button, Canvas } from "datocms-react-ui";
+import { KontainerParameters } from "./ConfigScreen";
 
 type PropTypes = {
 	ctx: RenderFieldExtensionCtx;
@@ -7,7 +8,8 @@ type PropTypes = {
 
 const KontainerAssets = ({ ctx }: PropTypes) => {
 	let isOpen = false;
-	let popUpUrl: string = "https://adobeplugin.kontainer.com";
+	const parameters = ctx.plugin.attributes.parameters as KontainerParameters;
+	let popUpUrl: string = `https://${parameters.domain}.kontainer.com`;
 	let currentValue = JSON.parse(
 		ctx.formValues[ctx.fieldPath] as string
 	) as KontainerEventData;

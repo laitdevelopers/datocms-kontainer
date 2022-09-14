@@ -1,30 +1,41 @@
-import { connect, RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
+import { connect, RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import "datocms-react-ui/styles.css";
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import KontainerAssets from './entrypoints/KontainerAssets';
+import React from "react";
+import { createRoot, Root } from "react-dom/client";
+import ConfigScreen from "./entrypoints/ConfigScreen";
+import KontainerAssets from "./entrypoints/KontainerAssets";
+
+let root: Root | undefined;
 
 function render(component: React.ReactNode) {
-  const element = document.getElementById('root') as Element;
-  const root = createRoot(element);
-  root.render(<React.StrictMode>{component}</React.StrictMode>);
+	if (!root) {
+		const element = document.getElementById("root") as Element;
+		root = createRoot(element);
+	}
+	root.render(<React.StrictMode>{component}</React.StrictMode>);
 }
 
 connect({
+	renderConfigScreen(ctx) {
+		return render(<ConfigScreen ctx={ctx} />);
+	},
 	manualFieldExtensions(ctx) {
 		return [
 			{
-        id: "kontainerAssets",
-        name: "Kontainer Assets",
-        type: "editor",
-        fieldTypes: ["json"],
+				id: "kontainerAssets",
+				name: "Kontainer Assets",
+				type: "editor",
+				fieldTypes: ["json"],
 			},
 		];
 	},
-  renderFieldExtension(fieldExtensionId: string, ctx: RenderFieldExtensionCtx) {
-    switch (fieldExtensionId) {
-      case 'kontainerAssets':
-        return render(<KontainerAssets ctx={ctx} />);
-    }
-  },
+	renderFieldExtension(
+		fieldExtensionId: string,
+		ctx: RenderFieldExtensionCtx
+	) {
+		switch (fieldExtensionId) {
+			case "kontainerAssets":
+				return render(<KontainerAssets ctx={ctx} />);
+		}
+	},
 });
