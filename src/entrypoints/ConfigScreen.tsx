@@ -5,7 +5,7 @@ type Props = {
 	ctx: RenderConfigScreenCtx;
 };
 
-export type KontainerParameters = { domain?: string };
+type KontainerParameters = { domain?: string };
 
 export default function ConfigScreen({ ctx }: Props) {
 	const onSubmit = async (values: KontainerParameters) => {

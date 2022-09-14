@@ -1,6 +1,5 @@
 import { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Button, Canvas } from "datocms-react-ui";
-import { KontainerParameters } from "./ConfigScreen";
 
 type PropTypes = {
 	ctx: RenderFieldExtensionCtx;
@@ -8,11 +7,27 @@ type PropTypes = {
 
 const KontainerAssets = ({ ctx }: PropTypes) => {
 	let isOpen = false;
-	const parameters = ctx.plugin.attributes.parameters as KontainerParameters;
-	let popUpUrl: string = `https://${parameters.domain}.kontainer.com`;
+	let popUpUrl: string;
+
+	let kontainerDomain = ctx.plugin.attributes.parameters["domain"] as string;
+	if (kontainerDomain == null) return null;
+
+	if (kontainerDomain.indexOf(".") < 0) {
+		kontainerDomain = `https://${kontainerDomain}.kontainer.com/`;
+	}
+	if (kontainerDomain.indexOf("http") < 0) {
+		kontainerDomain = `https://${kontainerDomain}`;
+	}
+
+	// Remove path part, eg. /a/b/c/d:
+	popUpUrl = kontainerDomain
+		.replace("http://", "https://")
+		.replace(/(\.\w+)\/.*$/, "$1");
+
 	let currentValue = JSON.parse(
 		ctx.formValues[ctx.fieldPath] as string
 	) as KontainerEventData;
+
 	const edit = () => {
 		isOpen = true;
 
@@ -43,7 +58,7 @@ const KontainerAssets = ({ ctx }: PropTypes) => {
 	};
 
 	const remove = () => {
-        ctx.setFieldValue(ctx.fieldPath, null);
+		ctx.setFieldValue(ctx.fieldPath, null);
 	};
 
 	return (

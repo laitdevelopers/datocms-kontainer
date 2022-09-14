@@ -1,8 +1,13 @@
-import { connect, RenderFieldExtensionCtx } from "datocms-plugin-sdk";
+import {
+	connect,
+	RenderFieldExtensionCtx,
+	RenderManualFieldExtensionConfigScreenCtx,
+} from "datocms-plugin-sdk";
 import "datocms-react-ui/styles.css";
 import React from "react";
 import { createRoot, Root } from "react-dom/client";
 import ConfigScreen from "./entrypoints/ConfigScreen";
+import { FieldConfig } from "./entrypoints/FieldConfig";
 import KontainerAssets from "./entrypoints/KontainerAssets";
 
 let root: Root | undefined;
@@ -26,8 +31,15 @@ connect({
 				name: "Kontainer Assets",
 				type: "editor",
 				fieldTypes: ["json"],
+				configurable: true,
 			},
 		];
+	},
+	renderManualFieldExtensionConfigScreen(
+		fieldExtensionId: string,
+		ctx: RenderManualFieldExtensionConfigScreenCtx
+	) {
+		return render(<FieldConfig ctx={ctx} />);
 	},
 	renderFieldExtension(
 		fieldExtensionId: string,
