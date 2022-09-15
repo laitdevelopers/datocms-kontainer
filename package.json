@@ -1,51 +1,56 @@
 {
-  "name": "my-first-plugin",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@types/node": "^16.11.58",
-    "@types/react": "^18.0.19",
-    "@types/react-dom": "^18.0.6",
-    "datocms-plugin-sdk": "^0.6.4",
-    "datocms-react-ui": "^0.6.4",
-    "final-form": "^4.20.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-final-form": "^6.5.9",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.8.3"
-  },
-  "scripts": {
-    "start": "cross-env BROWSER='none' PUBLIC_URL='/' react-scripts start",
-    "build": "cross-env PUBLIC_URL='.' react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "prepublishOnly": "npm run build"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3"
-  },
-  "datoCmsPlugin": {
-    "title": "",
-    "previewImage": "",
-    "coverImage": "",
-    "entryPoint": "build/index.html"
-  }
+	"name": "datocms-plugin-kontainer",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@types/node": "^16.11.58",
+		"@types/react": "^18.0.19",
+		"@types/react-dom": "^18.0.6",
+		"datocms-plugin-sdk": "^0.6.4",
+		"datocms-react-ui": "^0.6.4",
+		"final-form": "^4.20.7",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-final-form": "^6.5.9",
+		"react-scripts": "5.0.1",
+		"typescript": "^4.8.3"
+	},
+	"homepage": "https://kontainer.com",
+	"description": "Pick and choose images from your Kontainer application and save the urls in DatoCMS",
+	"keywords": [
+		"datocms-plugin"
+	],
+	"scripts": {
+		"start": "cross-env BROWSER='none' PUBLIC_URL='/' react-scripts start",
+		"build": "cross-env PUBLIC_URL='.' react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
+		"prepublishOnly": "npm run build"
+	},
+	"eslintConfig": {
+		"extends": [
+			"react-app"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"devDependencies": {
+		"cross-env": "^7.0.3"
+	},
+	"datoCmsPlugin": {
+		"title": "Kontainer plugin",
+		"coverImage": "kotainer-logo.png",
+		"entryPoint": "build/index.html",
+		"permissions": []
+	}
 }

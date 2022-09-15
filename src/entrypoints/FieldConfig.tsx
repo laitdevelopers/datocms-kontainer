@@ -1,12 +1,13 @@
 import { RenderManualFieldExtensionConfigScreenCtx } from "datocms-plugin-sdk";
-import { Canvas, Form, SwitchField } from "datocms-react-ui";
+import { Canvas, Form, TextField } from "datocms-react-ui";
 import { useCallback, useState } from "react";
 type PropTypes = {
 	ctx: RenderManualFieldExtensionConfigScreenCtx;
 };
 
 type Parameters = {
-	multiSelect: boolean;
+	minItems: number;
+	maxItems: number;
 };
 
 export function FieldConfig({ ctx }: PropTypes) {
@@ -26,12 +27,21 @@ export function FieldConfig({ ctx }: PropTypes) {
 	return (
 		<Canvas ctx={ctx}>
 			<Form>
-				<SwitchField
-					id="multiSelect"
-					name="multiSelect"
-					label="Allow multiple"
-					value={formValues.multiSelect ?? false}
-					onChange={update.bind(null, "multiSelect")}
+				<TextField
+					id="minItems"
+					name="minItems"
+					label="Minimum items"
+					required
+					value={formValues.minItems}
+					onChange={update.bind(null, "minItems")}
+				/>
+				<TextField
+					id="maxItems"
+					name="maxItems"
+					label="Maximum items"
+					required
+					value={formValues.maxItems}
+					onChange={update.bind(null, "maxItems")}
 				/>
 			</Form>
 		</Canvas>

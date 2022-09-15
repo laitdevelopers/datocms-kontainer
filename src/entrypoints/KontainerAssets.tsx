@@ -14,7 +14,7 @@ type StateTypes = {
 type KontainerEventData = {
 	url: string;
 	type: "image";
-	extension: "png" | "jpeg" | "jpg" | "tiff" | "xlsx";
+	extension: "png" | "jpeg" | "jpg" | "tiff" | "xlsx" | "svg" | "docx";
 	description: string | null;
 	alt: string | null;
 	fileId: number;
@@ -29,7 +29,11 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 		super(props);
 
 		this.ctx = props.ctx;
+		this.minItems = (this.ctx.parameters["minItems"] ?? 1) as number;
+		this.maxItems = (this.ctx.parameters["maxItems"] ?? 1) as number;
+		this.multiSelect = this.maxItems > 1;
 		this.state = { isOpen: false, assets: [] };
+
 		let kontainerDomain = this.ctx.plugin.attributes.parameters[
 			"domain"
 		] as string;
@@ -47,7 +51,9 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 
 	private ctx: RenderFieldExtensionCtx;
 	private popUpUrl: string;
-	private multiSelect: boolean = false;
+	private multiSelect: boolean;
+	private minItems: number;
+	private maxItems: number;
 
 	componentDidMount() {
 		const value = this.ctx.formValues[this.ctx.fieldPath];
@@ -111,6 +117,34 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 		);
 	}
 
+	private mapAsset(asset: KontainerEventData) {
+		if (asset.type === "image") {
+			return (
+				<img
+					style={{
+						height: "100px",
+						width: "100px",
+					}}
+					src={asset.url}
+					alt={asset.alt ?? undefined}
+					title={asset.description ?? undefined}
+				/>
+			);
+		} else {
+			return (
+				<div
+					style={{
+						height: "100px",
+						width: "100px",
+						cursor: "pointer",
+					}}
+				>
+					{asset.extension}
+				</div>
+			);
+		}
+	}
+
 	render(): React.ReactNode {
 		return (
 			<Canvas ctx={this.ctx}>
@@ -120,18 +154,8 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 					)}
 					{this.state.assets.map((asset, index) => (
 						<div key={index}>
-							<img
-								style={{
-									height: "100px",
-									width: "100px",
-									cursor: "pointer",
-								}}
-								onClick={() => {
-									this.edit();
-								}}
-								src={asset?.url}
-								alt={asset?.alt ?? undefined}
-							/>
+							{this.mapAsset(asset)}
+
 							<Button
 								onClick={() => {
 									this.remove(asset);
@@ -139,15 +163,24 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 							>
 								Remove
 							</Button>
+							<Button
+								onClick={() => {
+									this.edit(asset);
+								}}
+							>
+								Edit
+							</Button>
 						</div>
 					))}
-					<Button
-						onClick={() => {
-							this.edit();
-						}}
-					>
-						Add
-					</Button>
+					{this.maxItems > this.state.assets.length && (
+						<Button
+							onClick={() => {
+								this.edit();
+							}}
+						>
+							Add
+						</Button>
+					)}
 				</div>
 			</Canvas>
 		);
