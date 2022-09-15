@@ -1,9 +1,14 @@
 import { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
-import { Button, Canvas } from "datocms-react-ui";
+import { Button, Canvas, Spinner } from "datocms-react-ui";
 import React from "react";
 
 type PropTypes = {
 	ctx: RenderFieldExtensionCtx;
+};
+
+type StateTypes = {
+	isOpen: boolean;
+	assets: KontainerEventData[];
 };
 
 type KontainerEventData = {
@@ -19,11 +24,12 @@ type KontainerEventData = {
 	cf: unknown[];
 };
 
-export class KontainerAssets extends React.Component<PropTypes> {
+export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 	constructor(props: PropTypes) {
 		super(props);
 
 		this.ctx = props.ctx;
+		this.state = { isOpen: false, assets: [] };
 		let kontainerDomain = this.ctx.plugin.attributes.parameters[
 			"domain"
 		] as string;
@@ -37,28 +43,25 @@ export class KontainerAssets extends React.Component<PropTypes> {
 		this.popUpUrl = kontainerDomain
 			.replace("http://", "https://")
 			.replace(/(\.\w+)\/.*$/, "$1");
-		this.setAssets();
 	}
 
 	private ctx: RenderFieldExtensionCtx;
-	private assets: KontainerEventData[] = [];
-	private isOpen: boolean = false;
 	private popUpUrl: string;
 	private multiSelect: boolean = false;
 
-	private setAssets() {
+	componentDidMount() {
 		const value = this.ctx.formValues[this.ctx.fieldPath];
 		if (typeof value === "string") {
 			const assets = JSON.parse(
 				this.ctx.formValues[this.ctx.fieldPath] as string
 			) as KontainerEventData[];
 
-			this.assets = Array.isArray(assets) ? assets : [];
+			this.setState({ assets: Array.isArray(assets) ? assets : [] });
 		}
 	}
 
 	private edit(asset?: KontainerEventData) {
-		this.isOpen = true;
+		this.setState({ isOpen: true });
 
 		const eventListener = (event: MessageEvent<string>) => {
 			if (event.data == null || typeof event.data !== "string") {
@@ -66,8 +69,7 @@ export class KontainerAssets extends React.Component<PropTypes> {
 			}
 			const content = JSON.parse(event.data) as KontainerEventData;
 			this.updateItem(content, asset);
-			console.log(content);
-			this.isOpen = false;
+			this.setState({ isOpen: false });
 		};
 
 		window.addEventListener("message", eventListener, { once: true });
@@ -77,7 +79,7 @@ export class KontainerAssets extends React.Component<PropTypes> {
 		const interval = window.setInterval(() => {
 			if (popup?.closed) {
 				window.clearInterval(interval);
-				this.isOpen = false;
+				this.setState({ isOpen: false });
 
 				window.removeEventListener("message", eventListener);
 			}
@@ -89,25 +91,34 @@ export class KontainerAssets extends React.Component<PropTypes> {
 		oldAsset?: KontainerEventData
 	) {
 		if (oldAsset != null) {
-			const index = this.assets.indexOf(oldAsset);
-			this.assets.splice(index, 1, newAsset);
+			const index = this.state.assets.indexOf(oldAsset);
+			this.state.assets.splice(index, 1, newAsset);
 		} else {
-			this.assets.push(newAsset);
+			this.state.assets.push(newAsset);
 		}
-		this.ctx.setFieldValue(this.ctx.fieldPath, JSON.stringify(this.assets));
+		this.ctx.setFieldValue(
+			this.ctx.fieldPath,
+			JSON.stringify(this.state.assets)
+		);
 	}
 
 	private remove(asset: KontainerEventData) {
-		const index = this.assets.indexOf(asset);
-		this.assets.splice(index, 1);
-		this.ctx.setFieldValue(this.ctx.fieldPath, JSON.stringify(this.assets));
+		const index = this.state.assets.indexOf(asset);
+		this.state.assets.splice(index, 1);
+		this.ctx.setFieldValue(
+			this.ctx.fieldPath,
+			JSON.stringify(this.state.assets)
+		);
 	}
 
 	render(): React.ReactNode {
 		return (
 			<Canvas ctx={this.ctx}>
 				<div>
-					{this.assets.map((asset, index) => (
+					{this.state.isOpen && (
+						<Spinner size={48} placement="centered" />
+					)}
+					{this.state.assets.map((asset, index) => (
 						<div key={index}>
 							<img
 								style={{
