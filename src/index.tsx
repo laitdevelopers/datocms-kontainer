@@ -8,7 +8,7 @@ import React from "react";
 import { createRoot, Root } from "react-dom/client";
 import ConfigScreen from "./entrypoints/ConfigScreen";
 import { FieldConfig } from "./entrypoints/FieldConfig";
-import KontainerAssets from "./entrypoints/KontainerAssets";
+import { KontainerAssets } from "./entrypoints/KontainerAssets";
 
 let root: Root | undefined;
 
