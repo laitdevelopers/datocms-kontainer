@@ -2,8 +2,8 @@
 	"name": "datocms-plugin-kontainer",
 	"description": "Pick and choose images from your Kontainer application and save the urls in DatoCMS",
 	"version": "1.0.0",
-	"publisher": "LAITsoeren",
 	"homepage": "https://kontainer.com",
+	"publisher": "LAITsoeren",
 	"author": {
 		"name": "LAIT soeren",
 		"email": "soeren@lait.dk"
@@ -37,6 +37,10 @@
 		"eject": "react-scripts eject",
 		"prepublishOnly": "npm run build"
 	},
+	"files": [
+		"build/",
+		"kontainer-logo.png"
+	],
 	"eslintConfig": {
 		"extends": [
 			"react-app"
