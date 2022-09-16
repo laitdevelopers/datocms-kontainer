@@ -8,7 +8,7 @@
 		"name": "LAIT soeren",
 		"email": "soeren@lait.dk"
 	},
-	"icon": "kotainer-logo.png",
+	"icon": "kontainer-logo.png",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
@@ -63,7 +63,7 @@
 	},
 	"datoCmsPlugin": {
 		"title": "Kontainer plugin",
-		"coverImage": "kotainer-logo.png",
+		"coverImage": "kontainer-logo.png",
 		"entryPoint": "build/index.html",
 		"permissions": []
 	}
