@@ -68,13 +68,18 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 
 	private edit(asset?: KontainerEventData) {
 		this.setState({ isOpen: true });
-
 		const eventListener = (event: MessageEvent<string>) => {
 			if (event.data == null || typeof event.data !== "string") {
 				throw Error("No data was recieved from Kontainer.");
 			}
-			const content = JSON.parse(event.data) as KontainerEventData;
-			this.updateItem(content, asset);
+			const content = JSON.parse(event.data) as
+				| KontainerEventData
+				| KontainerEventData[];
+
+			this.updateItem(
+				Array.isArray(content) ? content : [content],
+				asset
+			);
 			this.setState({ isOpen: false });
 		};
 
@@ -93,14 +98,14 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 	}
 
 	private updateItem(
-		newAsset: KontainerEventData,
+		newAsset: KontainerEventData[],
 		oldAsset?: KontainerEventData
 	) {
 		if (oldAsset != null) {
 			const index = this.state.assets.indexOf(oldAsset);
-			this.state.assets.splice(index, 1, newAsset);
+			this.state.assets.splice(index, 1, ...newAsset);
 		} else {
-			this.state.assets.push(newAsset);
+			this.state.assets.push(...newAsset);
 		}
 		this.ctx.setFieldValue(
 			this.ctx.fieldPath,
