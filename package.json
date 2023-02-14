@@ -1,12 +1,11 @@
 {
-	"name": "datocms-plugin-kontainer",
+	"name": "@lait/datocms-plugin-kontainer",
 	"description": "Pick and choose images from your Kontainer application and save the urls in DatoCMS",
 	"version": "1.1.0",
-	"homepage": "https://kontainer.com",
-	"publisher": "LAITsoeren",
+	"homepage": "https://www.lait.dk/",
 	"author": {
-		"name": "LAIT soeren",
-		"email": "soeren@lait.dk"
+		"name": "LAIT",
+		"url": "http://www.lait.dk/"
 	},
 	"icon": "kontainer-logo.png",
 	"license": "MIT",
@@ -66,5 +65,8 @@
 		"coverImage": "kontainer-logo.png",
 		"entryPoint": "build/index.html",
 		"permissions": []
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
