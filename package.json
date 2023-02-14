@@ -1,18 +1,17 @@
 {
-	"name": "datocms-plugin-kontainer",
+	"name": "@lait/datocms-plugin-kontainer",
 	"description": "Pick and choose images from your Kontainer application and save the urls in DatoCMS",
 	"version": "1.1.0",
-	"homepage": "https://kontainer.com",
-	"publisher": "LAITsoeren",
+	"homepage": "https://www.lait.dk/",
 	"author": {
-		"name": "LAIT soeren",
-		"email": "soeren@lait.dk"
+		"name": "LAIT",
+		"url": "http://www.lait.dk/"
 	},
 	"icon": "kontainer-logo.png",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://bitbucket.org/laitdevelopers/datocms-kontainer"
+		"url": "https://github.com/laitdevelopers/datocms-kontainer"
 	},
 	"keywords": [
 		"datocms-plugin"
@@ -27,7 +26,6 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-final-form": "^6.5.9",
-		"react-scripts": "5.0.1",
 		"typescript": "^4.8.3"
 	},
 	"scripts": {
@@ -59,12 +57,16 @@
 		]
 	},
 	"devDependencies": {
-		"cross-env": "^7.0.3"
+		"cross-env": "^7.0.3",
+		"react-scripts": "5.0.1"
 	},
 	"datoCmsPlugin": {
 		"title": "Kontainer plugin",
 		"coverImage": "kontainer-logo.png",
 		"entryPoint": "build/index.html",
 		"permissions": []
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }
