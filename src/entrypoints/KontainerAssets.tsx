@@ -13,6 +13,7 @@ type StateTypes = {
 
 type KontainerEventData = {
 	url: string;
+	thumbnailUrl?: string;
 	type: "image";
 	extension: "png" | "jpeg" | "jpg" | "tiff" | "xlsx" | "svg" | "docx";
 	description: string | null;
@@ -56,15 +57,33 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 	private maxItems: number;
 
 	componentDidMount() {
-		const value = this.ctx.formValues[this.ctx.fieldPath];
+		const value = this.getValueByPath(this.ctx.formValues, this.ctx.fieldPath);
+		console.log(this.ctx.fieldPath)
 		if (typeof value === "string") {
 			const assets = JSON.parse(
-				this.ctx.formValues[this.ctx.fieldPath] as string
+				value
 			) as KontainerEventData[];
 
 			this.setState({ assets: Array.isArray(assets) ? assets : [] });
 		}
 	}
+
+	private getValueByPath(object: object, path: string) {
+		const keys = path.split('.');
+		let value = object;
+
+		for (let key of keys) {
+			if (value && typeof value === 'object' && key in value) {
+				// @ts-ignore
+				value = value[key];
+			} else {
+				return undefined;
+			}
+		}
+
+		return value;
+	}
+
 
 	private edit(asset?: KontainerEventData) {
 		this.setState({ isOpen: true });
@@ -84,8 +103,10 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 		};
 
 		window.addEventListener("message", eventListener, { once: true });
-
-		const url = `${this.popUpUrl}?cmsMode=1`;
+		let url = `${this.popUpUrl}?cmsMode=1`;
+		if (asset) {
+			url = `${this.popUpUrl}/folder/${asset?.folderId}/file/${asset?.fileId}?cmsMode=1`;
+		}
 		const popup = window.open(url);
 		const interval = window.setInterval(() => {
 			if (popup?.closed) {
@@ -127,10 +148,12 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 			return (
 				<img
 					style={{
-						height: "100px",
-						width: "100px",
+						height: "250px",
+						width: "auto",
+						maxWidth: "100%",
+						objectFit: "contain"
 					}}
-					src={asset.url}
+					src={asset.thumbnailUrl + '?w=250&h=250' ?? asset.url + '?w=250&h=250'}
 					alt={asset.alt ?? undefined}
 					title={asset.description ?? undefined}
 				/>
@@ -153,32 +176,41 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 	render(): React.ReactNode {
 		return (
 			<Canvas ctx={this.ctx}>
-				<div>
+				<div style={{
+							display: "flex", flexDirection: "column", justifyContent: "center", padding: "32px",
+							border: "1px solid rgb(240, 240, 240)",
+							borderRadius: "4px",
+						}}>
 					{this.state.isOpen && (
 						<Spinner size={48} placement="centered" />
 					)}
 					{this.state.assets.map((asset, index) => (
-						<div key={index}>
-							{this.mapAsset(asset)}
+						<div  key={index}>
+							<div style={{ display: "flex", justifyContent: "center", marginBottom: "12px" }}>
+								{this.mapAsset(asset)}
+							</div>
+							<div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
 
-							<Button
-								onClick={() => {
-									this.remove(asset);
-								}}
-							>
-								Remove
-							</Button>
-							<Button
-								onClick={() => {
-									this.edit(asset);
-								}}
-							>
-								Edit
-							</Button>
+								<Button
+									onClick={() => {
+										this.remove(asset);
+									}}
+								>
+									Remove
+								</Button>
+								<Button
+									onClick={() => {
+										this.edit(asset);
+									}}
+								>
+									Edit
+								</Button>
+							</div>
 						</div>
 					))}
 					{this.maxItems > this.state.assets.length && (
 						<Button
+							style={{margin: "auto"}}
 							onClick={() => {
 								this.edit();
 							}}
