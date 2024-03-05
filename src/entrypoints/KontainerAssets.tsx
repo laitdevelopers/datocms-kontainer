@@ -9,6 +9,7 @@ type PropTypes = {
 type StateTypes = {
 	isOpen: boolean;
 	assets: KontainerEventData[];
+	hasLoadedAsset: boolean;
 };
 
 type KontainerEventData = {
@@ -33,7 +34,7 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 		this.minItems = (this.ctx.parameters["minItems"] ?? 1) as number;
 		this.maxItems = (this.ctx.parameters["maxItems"] ?? 1) as number;
 		this.multiSelect = this.maxItems > 1;
-		this.state = { isOpen: false, assets: [] };
+		this.state = { isOpen: false, assets: [], hasLoadedAsset: false };
 
 		let kontainerDomain = this.ctx.plugin.attributes.parameters[
 			"domain"
@@ -132,6 +133,7 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 			this.ctx.fieldPath,
 			JSON.stringify(this.state.assets)
 		);
+		this.setState({hasLoadedAsset: false});
 	}
 
 	private remove(asset: KontainerEventData) {
@@ -141,22 +143,26 @@ export class KontainerAssets extends React.Component<PropTypes, StateTypes> {
 			this.ctx.fieldPath,
 			JSON.stringify(this.state.assets)
 		);
+		this.setState({hasLoadedAsset: false});
 	}
 
 	private mapAsset(asset: KontainerEventData) {
 		if (asset.type === "image") {
 			return (
-				<img
-					style={{
-						height: "250px",
-						width: "auto",
+				<div>
+					{this.state.hasLoadedAsset ? null :
+						<Spinner size={48} placement="centered" />
+					}
+					<img
+						style={this.state.hasLoadedAsset ? {maxHeight: "250px",
 						maxWidth: "100%",
-						objectFit: "contain"
-					}}
-					src={asset.thumbnailUrl + '?w=250&h=250' ?? asset.url + '?w=250&h=250'}
-					alt={asset.alt ?? undefined}
-					title={asset.description ?? undefined}
-				/>
+						objectFit: "contain"} : {display: "none"}}
+						src={asset.url}
+						alt={asset.alt ?? undefined}
+						title={asset.description ?? undefined}
+						onLoad={() => this.setState({hasLoadedAsset: true})}
+						/>
+				</div>
 			);
 		} else {
 			return (
